@@ -18,7 +18,10 @@
             ]
         }
     ],
-    "require": {},
+    "require": {
+        "newfold-labs/wp-module-context": "^1.0",
+        "newfold-labs/wp-module-features": "^1.2"
+    },
     "require-dev": {
         "newfold-labs/wp-php-standards": "^1.2.3"
     },
@@ -27,7 +30,7 @@
             "NewfoldLabs\\WP\\Module\\Atomic\\": "includes"
         },
         "files": [
-            "includes/functions.php"
+            "bootstrap.php"
         ]
     },
     "config": {

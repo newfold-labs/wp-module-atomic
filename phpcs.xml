@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<ruleset name="Features-Module">
+<ruleset name="Atomic-Module">
     <rule ref="Newfold"/>
     <config name="testVersion" value="7.3-"/>
     <config name="minimum_supported_wp_version" value="6.3"/>

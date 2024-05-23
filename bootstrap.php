@@ -22,8 +22,10 @@ if ( function_exists( 'add_action' ) ) {
 				add_filter( 'newfold/features/filter/canToggle:staging', '__return_false' );
 				add_filter( 'newfold/features/filter/isEnabled:staging', '__return_false' );
 
+				// Disable Help Center by default
+				add_filter( 'newfold/features/filter/defaultValue:helpCenter', '__return_false' );
 			}
 		},
-		11
+		2
 	);
 }

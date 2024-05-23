@@ -26,6 +26,6 @@ if ( function_exists( 'add_action' ) ) {
 				add_filter( 'newfold/features/filter/defaultValue:helpCenter', '__return_false' );
 			}
 		},
-		11
+		2
 	);
 }

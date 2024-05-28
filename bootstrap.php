@@ -24,6 +24,9 @@ if ( function_exists( 'add_action' ) ) {
 
 				// Disable Help Center by default
 				add_filter( 'newfold/features/filter/defaultValue:helpCenter', '__return_false' );
+
+				// Disable WonderBlocks by default
+				add_filter( 'newfold/features/filter/defaultValue:patterns', '__return_false' );
 			}
 		},
 		2

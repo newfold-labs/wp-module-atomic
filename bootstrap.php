@@ -35,7 +35,7 @@ if ( function_exists( 'add_action' ) ) {
 
 	// Late hooks
 	add_action(
-		'plugins_loaded',
+		'after_setup_theme',
 		function () {
 			if ( 'atomic' === getContext( 'platform' ) ) {
 
@@ -54,8 +54,10 @@ if ( function_exists( 'add_action' ) ) {
 					array( 'NewfoldLabs\WP\Module\Onboarding\LoginRedirect', 'remove_handle_redirect_action' )
 				);
 
+				// Set option to not perform onboarding redirect too
+				update_option( 'nfd_module_onboarding_should_redirect', '0' );
 			}
 		},
-		11
+		101
 	);
 }

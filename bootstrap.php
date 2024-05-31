@@ -77,11 +77,15 @@ if ( function_exists( 'add_action' ) ) {
 	 *
 	 * Set the default coming soon value for fresh installs to false on atomic
 	 */
-	add_filter( 'newfold/coming-soon/filter/default/fresh', function( $value ) {
-		// Set default coming soon value to false on atomic platform
-		if ( defined( 'IS_ATOMIC' ) && IS_ATOMIC ) { // setContext is not reliable at this point for some reason
-			return false;
+	add_filter(
+		'newfold/coming-soon/filter/default/fresh',
+		function ( $value ) {
+			// Set default coming soon value to false on atomic platform
+			// For some reason setContext is not reliable at this point
+			if ( defined( 'IS_ATOMIC' ) && IS_ATOMIC ) {
+				return false;
+			}
+			return $value;
 		}
-		return $value;
-	} );
+	);
 }

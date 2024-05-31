@@ -9,7 +9,13 @@ use function NewfoldLabs\WP\Context\getContext;
 
 if ( function_exists( 'add_action' ) ) {
 
-	// Early hooks
+	/**
+	 * Early Hooks
+	 *
+	 * These hooks need to be added before:
+	 * - features module (plugins_loaded:3)
+	 * - module loader (after_theme_setup:100)
+	 */
 	add_action(
 		'plugins_loaded',
 		function () {
@@ -30,10 +36,15 @@ if ( function_exists( 'add_action' ) ) {
 				add_filter( 'newfold/features/filter/defaultValue:patterns', '__return_false' );
 			}
 		},
+		// context is set on plugins_loaded priority 1
 		2
 	);
 
-	// Late hooks
+	/**
+	 * Late Hooks
+	 *
+	 * These hook removals need to be removed after they are added
+	 */
 	add_action(
 		'after_setup_theme',
 		function () {
@@ -60,4 +71,17 @@ if ( function_exists( 'add_action' ) ) {
 		},
 		101
 	);
+
+	/**
+	 * Coming soon default value
+	 *
+	 * Set the default coming soon value for fresh installs to false on atomic
+	 */
+	add_filter( 'newfold/coming-soon/filter/default/fresh', function( $value ) {
+		// Set default coming soon value to false on atomic platform
+		if ( defined( 'IS_ATOMIC' ) && IS_ATOMIC ) { // setContext is not reliable at this point for some reason
+			return false;
+		}
+		return $value;
+	} );
 }

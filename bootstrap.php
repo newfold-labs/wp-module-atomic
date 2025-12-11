@@ -34,6 +34,21 @@ if ( function_exists( 'add_action' ) ) {
 
 				// Disable WonderBlocks by default
 				add_filter( 'newfold/features/filter/defaultValue:patterns', '__return_false' );
+
+				// Override container values for atomic platform
+				add_filter( 'bluehost/container/cache_types', '__return_empty_array' );
+				add_filter(
+					'bluehost/container/marketplace_brand',
+					function () {
+						return 'bluehost-cloud';
+					}
+				);
+				add_filter(
+					'bluehost/plugin/brand',
+					function () {
+						return 'bluehost-cloud';
+					}
+				);
 			}
 		},
 		// context is set on plugins_loaded priority 1

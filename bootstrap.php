@@ -44,7 +44,7 @@ if ( function_exists( 'add_action' ) ) {
 					}
 				);
 				add_filter(
-					'bluehost/plugin/brand',
+					'bluehost/container/plugin/brand',
 					function () {
 						return 'bluehost-cloud';
 					}

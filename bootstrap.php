@@ -36,15 +36,15 @@ if ( function_exists( 'add_action' ) ) {
 				add_filter( 'newfold/features/filter/defaultValue:patterns', '__return_false' );
 
 				// Override container values for atomic platform
-				add_filter( 'bluehost/container/cache_types', '__return_empty_array' );
+				add_filter( 'newfold/container/cache_types', '__return_empty_array' );
 				add_filter(
-					'bluehost/container/marketplace_brand',
+					'newfold/container/marketplace_brand',
 					function () {
 						return 'bluehost-cloud';
 					}
 				);
 				add_filter(
-					'bluehost/container/plugin/brand',
+					'newfold/container/plugin/brand',
 					function () {
 						return 'bluehost-cloud';
 					}

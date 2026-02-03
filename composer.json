@@ -41,6 +41,9 @@
             "composer/installers": true,
             "johnpbloch/wordpress-core-installer": true
         },
+        "platform": {
+            "php": "7.4.33"
+        },
         "sort-packages": true
     },
     "scripts": {

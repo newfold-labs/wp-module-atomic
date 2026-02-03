@@ -19,7 +19,7 @@ if ( function_exists( 'add_action' ) ) {
 	add_action(
 		'plugins_loaded',
 		function () {
-			if ( 'atomic' === getContext( 'platform' ) ) {
+			if ( apply_filters( 'newfold/atomic/is_platform_atomic', 'atomic' === getContext( 'platform' ) ) ) {
 
 				// Disable performance
 				add_filter( 'newfold/features/filter/canToggle:performance', '__return_false' );
@@ -63,7 +63,7 @@ if ( function_exists( 'add_action' ) ) {
 	add_action(
 		'after_setup_theme',
 		function () {
-			if ( 'atomic' === getContext( 'platform' ) ) {
+			if ( apply_filters( 'newfold/atomic/is_platform_atomic', 'atomic' === getContext( 'platform' ) ) ) {
 
 				// Disable plugin login redirects
 				remove_action( 'login_redirect', array( 'Bluehost\LoginRedirect', 'on_login_redirect' ), 10, 3 );

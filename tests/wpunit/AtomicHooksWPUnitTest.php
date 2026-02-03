@@ -5,12 +5,24 @@ namespace NewfoldLabs\WP\Module\Atomic;
 /**
  * Tests for atomic platform hooks registered in bootstrap.php.
  *
- * With platform set to 'atomic' in _bootstrap.php, the module registers filters
- * on plugins_loaded and after_setup_theme. These tests assert that behavior.
+ * setUp() sets platform to 'atomic' and re-fires plugins_loaded and after_setup_theme
+ * so the bootstrap's already-registered callbacks run and add the atomic filters.
  *
  * @coversNothing
  */
 class AtomicHooksWPUnitTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
+
+	/**
+	 * Set atomic platform and trigger hooks so bootstrap callbacks run.
+	 *
+	 * @return void
+	 */
+	public function setUp(): void {
+		parent::setUp();
+		\NewfoldLabs\WP\Context\setContext( 'platform', 'atomic' );
+		do_action( 'plugins_loaded' );
+		do_action( 'after_setup_theme' );
+	}
 
 	/**
 	 * Verifies that performance feature is disabled on atomic.

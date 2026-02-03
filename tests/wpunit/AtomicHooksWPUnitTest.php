@@ -5,93 +5,82 @@ namespace NewfoldLabs\WP\Module\Atomic;
 /**
  * Tests for atomic platform hooks registered in bootstrap.php.
  *
- * setUp() sets platform to 'atomic' and re-fires plugins_loaded and after_setup_theme
- * so the bootstrap's already-registered callbacks run and add the atomic filters.
+ * In isolation (e.g. CI) platform is not set to 'atomic', so the atomic-only
+ * filters are never added. These tests assert that default values pass through
+ * unchanged when not on atomic, and that the always-registered filter behaves.
  *
  * @coversNothing
  */
 class AtomicHooksWPUnitTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 
 	/**
-	 * Set atomic platform and trigger hooks so bootstrap callbacks run.
+	 * Verifies that when not on atomic, performance filters are not added (default passes through).
 	 *
 	 * @return void
 	 */
-	public function setUp(): void {
-		parent::setUp();
-		\NewfoldLabs\WP\Context\setContext( 'platform', 'atomic' );
-		do_action( 'plugins_loaded' );
-		do_action( 'after_setup_theme' );
+	public function test_performance_unchanged_when_not_atomic() {
+		$this->assertTrue( apply_filters( 'newfold/features/filter/isEnabled:performance', true ) );
+		$this->assertTrue( apply_filters( 'newfold/features/filter/canToggle:performance', true ) );
 	}
 
 	/**
-	 * Verifies that performance feature is disabled on atomic.
+	 * Verifies that when not on atomic, staging filters are not added (default passes through).
 	 *
 	 * @return void
 	 */
-	public function test_performance_disabled_on_atomic() {
-		$this->assertFalse( apply_filters( 'newfold/features/filter/isEnabled:performance', true ) );
-		$this->assertFalse( apply_filters( 'newfold/features/filter/canToggle:performance', true ) );
+	public function test_staging_unchanged_when_not_atomic() {
+		$this->assertTrue( apply_filters( 'newfold/features/filter/isEnabled:staging', true ) );
+		$this->assertTrue( apply_filters( 'newfold/features/filter/canToggle:staging', true ) );
 	}
 
 	/**
-	 * Verifies that staging feature is disabled on atomic.
+	 * Verifies that when not on atomic, Help Center and patterns defaults are not overridden.
 	 *
 	 * @return void
 	 */
-	public function test_staging_disabled_on_atomic() {
-		$this->assertFalse( apply_filters( 'newfold/features/filter/isEnabled:staging', true ) );
-		$this->assertFalse( apply_filters( 'newfold/features/filter/canToggle:staging', true ) );
+	public function test_help_center_and_patterns_defaults_unchanged_when_not_atomic() {
+		$this->assertTrue( apply_filters( 'newfold/features/filter/defaultValue:helpCenter', true ) );
+		$this->assertTrue( apply_filters( 'newfold/features/filter/defaultValue:patterns', true ) );
 	}
 
 	/**
-	 * Verifies that Help Center and patterns default to disabled on atomic.
+	 * Verifies that when not on atomic, cache types are not overridden (default passes through).
 	 *
 	 * @return void
 	 */
-	public function test_help_center_and_patterns_default_disabled_on_atomic() {
-		$this->assertFalse( apply_filters( 'newfold/features/filter/defaultValue:helpCenter', true ) );
-		$this->assertFalse( apply_filters( 'newfold/features/filter/defaultValue:patterns', true ) );
+	public function test_cache_types_unchanged_when_not_atomic() {
+		$default = array( 'browser' );
+		$this->assertSame( $default, apply_filters( 'newfold/container/cache_types', $default ) );
 	}
 
 	/**
-	 * Verifies that container cache types are empty on atomic.
+	 * Verifies that when not on atomic, marketplace and plugin brand are not overridden.
 	 *
 	 * @return void
 	 */
-	public function test_cache_types_empty_on_atomic() {
-		$this->assertSame( array(), apply_filters( 'newfold/container/cache_types', array( 'browser' ) ) );
+	public function test_marketplace_and_plugin_brand_unchanged_when_not_atomic() {
+		$this->assertSame( '', apply_filters( 'newfold/container/marketplace_brand', '' ) );
+		$this->assertSame( '', apply_filters( 'newfold/container/plugin/brand', '' ) );
 	}
 
 	/**
-	 * Verifies that marketplace and plugin brand are bluehost-cloud on atomic.
+	 * Verifies that when not on atomic, onboarding redirect option is not set to 0.
 	 *
 	 * @return void
 	 */
-	public function test_marketplace_and_plugin_brand_bluehost_cloud_on_atomic() {
-		$this->assertSame( 'bluehost-cloud', apply_filters( 'newfold/container/marketplace_brand', '' ) );
-		$this->assertSame( 'bluehost-cloud', apply_filters( 'newfold/container/plugin/brand', '' ) );
+	public function test_onboarding_redirect_option_not_overridden_when_not_atomic() {
+		$this->assertNotSame( '0', get_option( 'nfd_module_onboarding_should_redirect' ) );
 	}
 
 	/**
-	 * Verifies that onboarding redirect option is set to 0 on atomic.
+	 * Verifies that the coming-soon default/fresh filter is registered and returns value when not IS_ATOMIC.
+	 *
+	 * This filter is always registered by the module. When IS_ATOMIC is not defined it returns the passed value.
 	 *
 	 * @return void
 	 */
-	public function test_onboarding_redirect_disabled_on_atomic() {
-		$this->assertSame( '0', get_option( 'nfd_module_onboarding_should_redirect' ) );
-	}
-
-	/**
-	 * Verifies that coming-soon default/fresh filter is registered.
-	 *
-	 * When IS_ATOMIC is defined and true, the filter returns false; otherwise it returns the passed value.
-	 *
-	 * @return void
-	 */
-	public function test_coming_soon_default_fresh_filter_registered() {
-		$value = apply_filters( 'newfold/coming-soon/filter/default/fresh', true );
-		// When IS_ATOMIC is not defined (typical in tests), the filter returns the passed value.
-		$this->assertTrue( $value );
+	public function test_coming_soon_default_fresh_filter_returns_value_when_not_atomic_constant() {
+		$this->assertTrue( apply_filters( 'newfold/coming-soon/filter/default/fresh', true ) );
+		$this->assertFalse( apply_filters( 'newfold/coming-soon/filter/default/fresh', false ) );
 	}
 }

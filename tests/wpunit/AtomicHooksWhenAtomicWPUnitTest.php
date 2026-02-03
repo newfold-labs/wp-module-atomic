@@ -5,27 +5,13 @@ namespace NewfoldLabs\WP\Module\Atomic;
 /**
  * Tests when platform is 'atomic': bootstrap callbacks add filters and set option.
  *
- * The context module sets platform to 'atomic' when IS_ATOMIC is defined and true.
- * We define the constant in setUp and re-fire plugins_loaded and after_setup_theme
- * so the context and atomic callbacks run with atomic platform.
+ * IS_ATOMIC is defined in wpunit/_bootstrap.php before WordPress loads, so when
+ * WPLoader fires plugins_loaded the context module sets platform to 'atomic' and
+ * the atomic module's callbacks add the filters. No setUp needed.
  *
  * @coversNothing
  */
 class AtomicHooksWhenAtomicWPUnitTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
-
-	/**
-	 * Define IS_ATOMIC and re-fire hooks so context and atomic callbacks run with atomic platform.
-	 *
-	 * @return void
-	 */
-	public function setUp(): void {
-		parent::setUp();
-		if ( ! defined( 'IS_ATOMIC' ) ) {
-			define( 'IS_ATOMIC', true );
-		}
-		do_action( 'plugins_loaded' );
-		do_action( 'after_setup_theme' );
-	}
 
 	/**
 	 * Verifies that performance feature is disabled when platform is atomic.
@@ -83,5 +69,14 @@ class AtomicHooksWhenAtomicWPUnitTest extends \lucatume\WPBrowser\TestCase\WPTes
 	 */
 	public function test_onboarding_redirect_disabled_on_atomic() {
 		$this->assertSame( '0', get_option( 'nfd_module_onboarding_should_redirect' ) );
+	}
+
+	/**
+	 * Verifies that coming-soon default/fresh returns false when IS_ATOMIC is defined.
+	 *
+	 * @return void
+	 */
+	public function test_coming_soon_default_fresh_false_on_atomic() {
+		$this->assertFalse( apply_filters( 'newfold/coming-soon/filter/default/fresh', true ) );
 	}
 }

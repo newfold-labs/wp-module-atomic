@@ -9,18 +9,6 @@ use function NewfoldLabs\WP\Context\getContext;
 
 if ( function_exists( 'add_action' ) ) {
 
-	// In wpunit, force atomic platform when NFD_ATOMIC_WPUNIT_ATOMIC_MODE is defined (set in tests/wpunit/_bootstrap.php).
-	// Priority 0 runs before context (1) and this module's callback (2), so the filter is in place in time.
-	if ( defined( 'NFD_ATOMIC_WPUNIT_ATOMIC_MODE' ) && NFD_ATOMIC_WPUNIT_ATOMIC_MODE ) {
-		add_action(
-			'plugins_loaded',
-			function () {
-				add_filter( 'newfold/atomic/is_platform_atomic', '__return_true' );
-			},
-			0
-		);
-	}
-
 	/**
 	 * Early Hooks
 	 *
@@ -31,7 +19,7 @@ if ( function_exists( 'add_action' ) ) {
 	add_action(
 		'plugins_loaded',
 		function () {
-			if ( apply_filters( 'newfold/atomic/is_platform_atomic', 'atomic' === getContext( 'platform' ) ) ) {
+			if ( 'atomic' === getContext( 'platform' ) ) {
 
 				// Disable performance
 				add_filter( 'newfold/features/filter/canToggle:performance', '__return_false' );
@@ -75,7 +63,7 @@ if ( function_exists( 'add_action' ) ) {
 	add_action(
 		'after_setup_theme',
 		function () {
-			if ( apply_filters( 'newfold/atomic/is_platform_atomic', 'atomic' === getContext( 'platform' ) ) ) {
+			if ( 'atomic' === getContext( 'platform' ) ) {
 
 				// Disable plugin login redirects
 				remove_action( 'login_redirect', array( 'Bluehost\LoginRedirect', 'on_login_redirect' ), 10, 3 );

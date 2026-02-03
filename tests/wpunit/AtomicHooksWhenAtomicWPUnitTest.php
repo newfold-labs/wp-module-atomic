@@ -5,24 +5,13 @@ namespace NewfoldLabs\WP\Module\Atomic;
 /**
  * Tests when platform is 'atomic': bootstrap callbacks add filters and set option.
  *
- * Uses the newfold/atomic/is_platform_atomic filter (see bootstrap.php) to force
- * the atomic branch in setUp, then re-fires plugins_loaded and after_setup_theme.
+ * NFD_ATOMIC_WPUNIT_ATOMIC_MODE is defined in _bootstrap.php; bootstrap.php then
+ * registers a plugins_loaded priority 0 callback that adds the is_platform_atomic
+ * filter, so when WordPress loads the atomic branch runs and the filters are present.
  *
  * @coversNothing
  */
 class AtomicHooksWhenAtomicWPUnitTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
-
-	/**
-	 * Force atomic platform via filter and re-fire hooks so bootstrap callbacks add filters.
-	 *
-	 * @return void
-	 */
-	public function setUp(): void {
-		parent::setUp();
-		add_filter( 'newfold/atomic/is_platform_atomic', '__return_true' );
-		do_action( 'plugins_loaded' );
-		do_action( 'after_setup_theme' );
-	}
 
 	/**
 	 * Verifies that performance feature is disabled when platform is atomic.

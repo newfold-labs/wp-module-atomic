@@ -3,15 +3,14 @@
 namespace NewfoldLabs\WP\Module\Atomic;
 
 /**
- * Tests for atomic platform hooks registered in bootstrap.php.
+ * Tests when platform is not 'atomic': atomic-only filters are not added.
  *
- * In isolation (e.g. CI) platform is not set to 'atomic', so the atomic-only
- * filters are never added. These tests assert that default values pass through
- * unchanged when not on atomic, and that the always-registered filter behaves.
+ * These run first (class name order) so no atomic filters have been applied yet.
+ * Asserts that default values pass through unchanged and the always-registered filter behaves.
  *
  * @coversNothing
  */
-class AtomicHooksWPUnitTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
+class AtomicHooksWhenNotAtomicWPUnitTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 
 	/**
 	 * Verifies that when not on atomic, performance filters are not added (default passes through).

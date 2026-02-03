@@ -5,50 +5,26 @@ namespace NewfoldLabs\WP\Module\Atomic;
 /**
  * Tests when platform is 'atomic': bootstrap callbacks add filters and set option.
  *
- * Uses the context module's setContext (require dependency) so we can re-fire
- * plugins_loaded and after_setup_theme with platform=atomic and assert atomic behavior.
- * Skipped if setContext is not available.
+ * The context module sets platform to 'atomic' when IS_ATOMIC is defined and true.
+ * We define the constant in setUp and re-fire plugins_loaded and after_setup_theme
+ * so the context and atomic callbacks run with atomic platform.
  *
  * @coversNothing
  */
 class AtomicHooksWhenAtomicWPUnitTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 
 	/**
-	 * Set atomic platform and re-fire hooks so bootstrap callbacks run (requires context module).
-	 *
-	 * Context module fires do_action('newfold/context/set') at plugins_loaded priority 1; its
-	 * callback on that action sets platform to 'default' when IS_ATOMIC is not defined. We
-	 * hook into newfold/context/set at priority 999 so we run after that and set platform to
-	 * 'atomic'. Then we fire plugins_loaded and after_setup_theme so the atomic module's
-	 * callbacks run with platform=atomic.
+	 * Define IS_ATOMIC and re-fire hooks so context and atomic callbacks run with atomic platform.
 	 *
 	 * @return void
 	 */
 	public function setUp(): void {
 		parent::setUp();
-		if ( ! function_exists( 'NewfoldLabs\WP\Context\setContext' ) ) {
-			return;
+		if ( ! defined( 'IS_ATOMIC' ) ) {
+			define( 'IS_ATOMIC', true );
 		}
-		add_action(
-			'newfold/context/set',
-			function () {
-				\NewfoldLabs\WP\Context\setContext( 'platform', 'atomic' );
-			},
-			999
-		);
 		do_action( 'plugins_loaded' );
 		do_action( 'after_setup_theme' );
-	}
-
-	/**
-	 * Skip the suite if context setContext is not available.
-	 *
-	 * @return void
-	 */
-	private function skip_if_no_context() {
-		if ( ! function_exists( 'NewfoldLabs\WP\Context\setContext' ) ) {
-			$this->markTestSkipped( 'wp-module-context setContext is required to test atomic branch' );
-		}
 	}
 
 	/**
@@ -57,7 +33,6 @@ class AtomicHooksWhenAtomicWPUnitTest extends \lucatume\WPBrowser\TestCase\WPTes
 	 * @return void
 	 */
 	public function test_performance_disabled_on_atomic() {
-		$this->skip_if_no_context();
 		$this->assertFalse( apply_filters( 'newfold/features/filter/isEnabled:performance', true ) );
 		$this->assertFalse( apply_filters( 'newfold/features/filter/canToggle:performance', true ) );
 	}
@@ -68,7 +43,6 @@ class AtomicHooksWhenAtomicWPUnitTest extends \lucatume\WPBrowser\TestCase\WPTes
 	 * @return void
 	 */
 	public function test_staging_disabled_on_atomic() {
-		$this->skip_if_no_context();
 		$this->assertFalse( apply_filters( 'newfold/features/filter/isEnabled:staging', true ) );
 		$this->assertFalse( apply_filters( 'newfold/features/filter/canToggle:staging', true ) );
 	}
@@ -79,7 +53,6 @@ class AtomicHooksWhenAtomicWPUnitTest extends \lucatume\WPBrowser\TestCase\WPTes
 	 * @return void
 	 */
 	public function test_help_center_and_patterns_default_disabled_on_atomic() {
-		$this->skip_if_no_context();
 		$this->assertFalse( apply_filters( 'newfold/features/filter/defaultValue:helpCenter', true ) );
 		$this->assertFalse( apply_filters( 'newfold/features/filter/defaultValue:patterns', true ) );
 	}
@@ -90,7 +63,6 @@ class AtomicHooksWhenAtomicWPUnitTest extends \lucatume\WPBrowser\TestCase\WPTes
 	 * @return void
 	 */
 	public function test_cache_types_empty_on_atomic() {
-		$this->skip_if_no_context();
 		$this->assertSame( array(), apply_filters( 'newfold/container/cache_types', array( 'browser' ) ) );
 	}
 
@@ -100,7 +72,6 @@ class AtomicHooksWhenAtomicWPUnitTest extends \lucatume\WPBrowser\TestCase\WPTes
 	 * @return void
 	 */
 	public function test_marketplace_and_plugin_brand_bluehost_cloud_on_atomic() {
-		$this->skip_if_no_context();
 		$this->assertSame( 'bluehost-cloud', apply_filters( 'newfold/container/marketplace_brand', '' ) );
 		$this->assertSame( 'bluehost-cloud', apply_filters( 'newfold/container/plugin/brand', '' ) );
 	}
@@ -111,7 +82,6 @@ class AtomicHooksWhenAtomicWPUnitTest extends \lucatume\WPBrowser\TestCase\WPTes
 	 * @return void
 	 */
 	public function test_onboarding_redirect_disabled_on_atomic() {
-		$this->skip_if_no_context();
 		$this->assertSame( '0', get_option( 'nfd_module_onboarding_should_redirect' ) );
 	}
 }

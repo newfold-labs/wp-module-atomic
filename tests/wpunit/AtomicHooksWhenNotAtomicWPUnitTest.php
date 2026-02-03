@@ -5,8 +5,10 @@ namespace NewfoldLabs\WP\Module\Atomic;
 /**
  * Tests when platform is not 'atomic': atomic-only filters are not added.
  *
- * These run first (class name order) so no atomic filters have been applied yet.
- * Asserts that default values pass through unchanged and the always-registered filter behaves.
+ * These run first (class name order) before IS_ATOMIC is defined, so no atomic
+ * filters are applied. Asserts that default values pass through unchanged and
+ * the always-registered filter behaves. The atomic branch is tested in
+ * AtomicHooksWhenAtomicWPUnitTest (via defining IS_ATOMIC before re-firing hooks).
  *
  * @coversNothing
  */

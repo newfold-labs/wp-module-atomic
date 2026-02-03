@@ -16,9 +16,11 @@ class AtomicHooksWhenAtomicWPUnitTest extends \lucatume\WPBrowser\TestCase\WPTes
 	/**
 	 * Set atomic platform and re-fire hooks so bootstrap callbacks run (requires context module).
 	 *
-	 * Context module sets platform at plugins_loaded priority 1 (to 'default' when IS_ATOMIC
-	 * is not defined). We register our setContext at priority 1 so it runs after that and
-	 * before the atomic module's callback at priority 2, then fire the actions.
+	 * Context module fires do_action('newfold/context/set') at plugins_loaded priority 1; its
+	 * callback on that action sets platform to 'default' when IS_ATOMIC is not defined. We
+	 * hook into newfold/context/set at priority 999 so we run after that and set platform to
+	 * 'atomic'. Then we fire plugins_loaded and after_setup_theme so the atomic module's
+	 * callbacks run with platform=atomic.
 	 *
 	 * @return void
 	 */
@@ -28,11 +30,11 @@ class AtomicHooksWhenAtomicWPUnitTest extends \lucatume\WPBrowser\TestCase\WPTes
 			return;
 		}
 		add_action(
-			'plugins_loaded',
+			'newfold/context/set',
 			function () {
 				\NewfoldLabs\WP\Context\setContext( 'platform', 'atomic' );
 			},
-			1
+			999
 		);
 		do_action( 'plugins_loaded' );
 		do_action( 'after_setup_theme' );

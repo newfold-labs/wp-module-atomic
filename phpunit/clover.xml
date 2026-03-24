@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1770275527">
-  <project timestamp="1770275527">
+<coverage generated="1774379377">
+  <project timestamp="1774379377">
     <file name="/home/runner/work/wp-module-atomic/wp-module-atomic/bootstrap.php">
       <line num="19" type="stmt" count="0"/>
       <line num="20" type="stmt" count="0"/>

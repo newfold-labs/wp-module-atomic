@@ -27,6 +27,7 @@ jobs:
       contents: read       # Required for actions/checkout and technote-space/get-diff-action to read the repository tree.
       pull-requests: read  # Required for technote-space/get-diff-action to read the pull request diff via the GitHub API on pull_request events.
       actions: write        # Required for actions/cache to restore and save the Composer dependency cache.
+    timeout-minutes: 30
     steps:
 
       - name: Checkout

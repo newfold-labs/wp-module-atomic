@@ -18,6 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read # Required for actions/checkout to clone this private repository with GITHUB_TOKEN.
+    timeout-minutes: 10
     steps:
 
       - name: Checkout

@@ -1,0 +1,8 @@
+{
+  "name": "wp-module-atomic",
+  "version": "1.4.2",
+  "engines": {
+    "node": ">=22.11.0",
+    "npm": ">=10.9.0"
+  }
+}
